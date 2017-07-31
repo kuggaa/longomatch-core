@@ -8,7 +8,9 @@ using VAS.Core.ViewModel;
 using VAS.Core.ViewModel.Statistics;
 using VAS.Drawing;
 using VAS.Drawing.Cairo;
+using VAS.Drawing.CanvasObjects.Blackboard;
 using VAS.Drawing.CanvasObjects.Statistics;
+using VAS.UI.Helpers;
 using VAS.UI.Helpers.Bindings;
 
 namespace LongoMatch.Gui.Component
@@ -24,12 +26,14 @@ namespace LongoMatch.Gui.Component
 		public LMLimitationWidget ()
 		{
 			this.Build ();
+			// FIXME: This color is bg_dark_color from gtkrc, it should be set in the color scheme, styleconf, whatever...
+			backgroundBox.ModifyBg (Gtk.StateType.Normal, Misc.ToGdkColor (Color.Parse ("#151a20")));
 			barCanvas = new Canvas (new WidgetWrapper (barDrawingArea));
 			barView = new BarChartView ();
 			barCanvas.AddObject (barView);
 			SetBarViewModel ();
 
-			button1.Clicked += (sender, e) => {
+			upgradeButton.Clicked += (sender, e) => {
 				barView.ViewModel.Series.ViewModels [0].Elements--;
 				barView.ViewModel.Series.ViewModels [1].Elements++;
 				barView.ReDraw ();
@@ -78,11 +82,15 @@ namespace LongoMatch.Gui.Component
 				Height = 10,
 				Series = new SeriesCollectionVM {
 					ViewModels = {
-						new SeriesVM("Remaining", 2, VAS.Core.Common.Color.Green),
+						new SeriesVM("Remaining", 3, VAS.Core.Common.Color.Green1),
 						//viewModel.Maximum - viewModel.Count
-						new SeriesVM("Current", 1, VAS.Core.Common.Color.Red)
+						new SeriesVM("Current", 0, VAS.Core.Common.Color.Transparent)
 						//viewModel.Count
 					}
+				},
+				Background = new ImageCanvasObject {
+					Image = App.Current.ResourcesLocator.LoadImage ("/Users/vguzman/Desktop/gradient_bg.png"),
+					Mode = ScaleMode.Fill
 				}
 			});
 		}
