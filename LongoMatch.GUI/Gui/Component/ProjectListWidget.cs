@@ -77,6 +77,8 @@ namespace LongoMatch.Gui.Component
 			};
 			focusimage.Image = App.Current.ResourcesLocator.LoadIcon ("vas-search", 27);
 			ViewMode = ProjectListViewMode.List;
+
+			limitationWidget.SetViewModel (App.Current.LicenseLimitationsService.Get ("Projects"));
 		}
 
 		public SelectionMode SelectionMode {

@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel;
 using VAS.Core.Common;
+using VAS.Core.Interfaces.MVVMC;
 using VAS.Core.MVVMC;
 using VAS.Core.ViewModel;
 using VAS.Core.ViewModel.Statistics;
@@ -15,8 +16,12 @@ using VAS.UI.Helpers.Bindings;
 
 namespace LongoMatch.Gui.Component
 {
+	/// <summary>
+	/// LongoMatch widget for count limitations.
+	/// It shows a "progress bar" with the number of remaining/current elements limited.
+	/// </summary>
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class LMLimitationWidget : Gtk.Bin
+	public partial class LMLimitationWidget : Gtk.Bin, IView<LicenseLimitationVM>
 	{
 		LicenseLimitationVM viewModel;
 		BindingContext ctx;
@@ -31,14 +36,48 @@ namespace LongoMatch.Gui.Component
 			barCanvas = new Canvas (new WidgetWrapper (barDrawingArea));
 			barView = new BarChartView ();
 			barCanvas.AddObject (barView);
-			SetBarViewModel ();
 
-			upgradeButton.Clicked += (sender, e) => {
-				barView.ViewModel.Series.ViewModels [0].Elements--;
-				barView.ViewModel.Series.ViewModels [1].Elements++;
-				barView.ReDraw ();
-			};
+			upgradeButton.ApplyStyleNormal ();
+
+			Bind ();
+
+			//upgradeButton.Clicked += (sender, e) => {
+			//	barView.ViewModel.Series.ViewModels [0].Elements--;
+			//	barView.ViewModel.Series.ViewModels [1].Elements++;
+			//	barView.ReDraw ();
+			//};
 		}
+
+		public override void Dispose ()
+		{
+			Dispose (true);
+			base.Dispose ();
+		}
+
+		protected virtual void Dispose (bool disposing)
+		{
+			if (Disposed) {
+				return;
+			}
+			if (disposing) {
+				Destroy ();
+			}
+			Disposed = true;
+		}
+
+		protected override void OnDestroyed ()
+		{
+			Log.Verbose ($"Destroying {GetType ()}");
+			ctx?.Dispose ();
+			ctx = null;
+			ViewModel = null;
+
+			base.OnDestroyed ();
+
+			Disposed = true;
+		}
+
+		protected bool Disposed { get; private set; } = false;
 
 		/// <summary>
 		/// Gets or sets the view model.
@@ -48,7 +87,6 @@ namespace LongoMatch.Gui.Component
 			get {
 				return viewModel;
 			}
-
 			set {
 				if (viewModel != null) {
 					viewModel.PropertyChanged -= HandlePropertyChangedEventHandler;
@@ -62,10 +100,15 @@ namespace LongoMatch.Gui.Component
 			}
 		}
 
+		public void SetViewModel (object viewModel)
+		{
+			ViewModel = (LicenseLimitationVM)viewModel;
+		}
+
 		void Bind ()
 		{
 			ctx = this.GetBindingContext ();
-			//ctx.Add (button1.Bind (vm => ((LicenseLimitationVM)vm).UpgradeCommand));
+			ctx.Add (upgradeButton.Bind (vm => ((LicenseLimitationVM)vm).UpgradeCommand));
 			ctx.Add (countLabel.Bind (vm => ((LicenseLimitationVM)vm).Count, new Int32Converter ()));
 		}
 
@@ -82,10 +125,8 @@ namespace LongoMatch.Gui.Component
 				Height = 10,
 				Series = new SeriesCollectionVM {
 					ViewModels = {
-						new SeriesVM("Remaining", 3, VAS.Core.Common.Color.Green1),
-						//viewModel.Maximum - viewModel.Count
-						new SeriesVM("Current", 0, VAS.Core.Common.Color.Transparent)
-						//viewModel.Count
+						new SeriesVM("Remaining", ViewModel.Maximum - ViewModel.Count, Color.Green1),
+						new SeriesVM("Current", ViewModel.Count, Color.Transparent)
 					}
 				},
 				Background = new ImageCanvasObject {

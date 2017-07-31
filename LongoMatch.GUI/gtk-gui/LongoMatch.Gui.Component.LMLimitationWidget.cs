@@ -4,6 +4,8 @@ namespace LongoMatch.Gui.Component
 {
 	public partial class LMLimitationWidget
 	{
+		private global::Gtk.EventBox backgroundBox;
+
 		private global::Gtk.VBox vbox4;
 
 		private global::Gtk.DrawingArea barDrawingArea;
@@ -21,6 +23,9 @@ namespace LongoMatch.Gui.Component
 			global::Stetic.BinContainer.Attach (this);
 			this.Name = "LongoMatch.Gui.Component.LMLimitationWidget";
 			// Container child LongoMatch.Gui.Component.LMLimitationWidget.Gtk.Container+ContainerChild
+			this.backgroundBox = new global::Gtk.EventBox ();
+			this.backgroundBox.Name = "backgroundBox";
+			// Container child backgroundBox.Gtk.Container+ContainerChild
 			this.vbox4 = new global::Gtk.VBox ();
 			this.vbox4.Name = "vbox4";
 			// Container child vbox4.Gtk.Box+BoxChild
@@ -60,7 +65,8 @@ namespace LongoMatch.Gui.Component
 			w4.Position = 1;
 			w4.Expand = false;
 			w4.Fill = false;
-			this.Add (this.vbox4);
+			this.backgroundBox.Add (this.vbox4);
+			this.Add (this.backgroundBox);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}
