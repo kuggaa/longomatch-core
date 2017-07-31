@@ -4,7 +4,9 @@ using System;
 using System.Linq;
 using LongoMatch.Core;
 using LongoMatch.Core.Common;
+using LongoMatch.Core.Store;
 using LongoMatch.License;
+using VAS.Core.Events;
 using VAS.Core.License;
 using VAS.Core.ViewModel;
 using VAS.Services;
@@ -22,6 +24,21 @@ namespace LongoMatch.Services
 			CreateLimitations ();
 		}
 
+		public override bool Start ()
+		{
+			App.Current.EventsBroker.Subscribe<StorageAddedEvent<LMProject>> (HandleProjectCreated);
+			App.Current.EventsBroker.Subscribe<StorageDeletedEvent<LMProject>> (HandleProjectDeleted);
+			UpdateLicenseLimitationsCounters ();
+			return base.Start ();
+		}
+
+		public override bool Stop ()
+		{
+			App.Current.EventsBroker.Unsubscribe<StorageAddedEvent<LMProject>> (HandleProjectCreated);
+			App.Current.EventsBroker.Unsubscribe<StorageDeletedEvent<LMProject>> (HandleProjectDeleted);
+			return base.Stop ();
+		}
+
 		protected override void UpdateFeatureLimitations ()
 		{
 			LMLicenseStatus status = (LMLicenseStatus)App.Current.LicenseManager.LicenseStatus;
@@ -33,6 +50,12 @@ namespace LongoMatch.Services
 			string conversionLimitation = LongoMatchFeature.VideoConverter.ToString ();
 			var converterFeature = Get<FeatureLimitationVM> (conversionLimitation);
 			converterFeature.Model.Enabled = status.Limitations.Contains (conversionLimitation);
+		}
+
+		void UpdateLicenseLimitationsCounters ()
+		{
+			int count = App.Current.DatabaseManager.ActiveDB.Count<LMProject> ();
+			Get<CountLimitationVM> ("Projects").Count = count;
 		}
 
 		void CreateLimitations ()
@@ -49,6 +72,23 @@ namespace LongoMatch.Services
 				Enabled = status.Limitations.Contains (LongoMatchFeature.VideoConverter.ToString ()),
 				FeatureName = Catalog.GetString ("Video Converter")
 			});
+			Add (new CountLicenseLimitation {
+				RegisterName = "Projects",
+				Enabled = true,
+				Maximum = 3,
+			});
+		}
+
+		void HandleProjectCreated (StorageAddedEvent<LMProject> obj)
+		{
+			var limit = Get<CountLimitationVM> ("Projects");
+			limit.Count++;
+		}
+
+		void HandleProjectDeleted (StorageDeletedEvent<LMProject> obj)
+		{
+			var limit = Get<CountLimitationVM> ("Projects");
+			limit.Count--;
 		}
 	}
 }
