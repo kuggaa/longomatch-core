@@ -4,13 +4,11 @@ namespace LongoMatch.Gui.Component
 {
 	public partial class LMLimitationWidget
 	{
-		private global::Gtk.EventBox backgroundBox;
-
-		private global::Gtk.VBox vbox2;
+		private global::Gtk.VBox vbox4;
 
 		private global::Gtk.DrawingArea barDrawingArea;
 
-		private global::Gtk.HBox hbox1;
+		private global::Gtk.HBox hbox3;
 
 		private global::Gtk.Label countLabel;
 
@@ -21,54 +19,48 @@ namespace LongoMatch.Gui.Component
 			global::Stetic.Gui.Initialize (this);
 			// Widget LongoMatch.Gui.Component.LMLimitationWidget
 			global::Stetic.BinContainer.Attach (this);
-			this.HeightRequest = 50;
 			this.Name = "LongoMatch.Gui.Component.LMLimitationWidget";
 			// Container child LongoMatch.Gui.Component.LMLimitationWidget.Gtk.Container+ContainerChild
-			this.backgroundBox = new global::Gtk.EventBox ();
-			this.backgroundBox.Name = "backgroundBox";
-			// Container child backgroundBox.Gtk.Container+ContainerChild
-			this.vbox2 = new global::Gtk.VBox ();
-			this.vbox2.Name = "vbox2";
-			this.vbox2.Spacing = 6;
-			// Container child vbox2.Gtk.Box+BoxChild
+			this.vbox4 = new global::Gtk.VBox ();
+			this.vbox4.Name = "vbox4";
+			// Container child vbox4.Gtk.Box+BoxChild
 			this.barDrawingArea = new global::Gtk.DrawingArea ();
 			this.barDrawingArea.HeightRequest = 10;
 			this.barDrawingArea.Name = "barDrawingArea";
-			this.vbox2.Add (this.barDrawingArea);
-			global::Gtk.Box.BoxChild w1 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.barDrawingArea]));
+			this.vbox4.Add (this.barDrawingArea);
+			global::Gtk.Box.BoxChild w1 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.barDrawingArea]));
 			w1.Position = 0;
 			w1.Expand = false;
-			// Container child vbox2.Gtk.Box+BoxChild
-			this.hbox1 = new global::Gtk.HBox ();
-			this.hbox1.Name = "hbox1";
-			this.hbox1.Spacing = 6;
-			// Container child hbox1.Gtk.Box+BoxChild
+			// Container child vbox4.Gtk.Box+BoxChild
+			this.hbox3 = new global::Gtk.HBox ();
+			this.hbox3.Name = "hbox3";
+			// Container child hbox3.Gtk.Box+BoxChild
 			this.countLabel = new global::Gtk.Label ();
 			this.countLabel.Name = "countLabel";
-			this.countLabel.LabelProp = global::VAS.Core.Catalog.GetString ("Only <b>{} projects</b> left in your plan!");
+			this.countLabel.LabelProp = global::VAS.Core.Catalog.GetString ("Only <b> {} projects </b> left in your plan!");
 			this.countLabel.UseMarkup = true;
-			this.hbox1.Add (this.countLabel);
-			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.countLabel]));
+			this.hbox3.Add (this.countLabel);
+			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.countLabel]));
 			w2.Position = 0;
 			w2.Expand = false;
 			w2.Fill = false;
-			// Container child hbox1.Gtk.Box+BoxChild
+			// Container child hbox3.Gtk.Box+BoxChild
 			this.upgradeButton = new global::Gtk.Button ();
 			this.upgradeButton.CanFocus = true;
 			this.upgradeButton.Name = "upgradeButton";
 			this.upgradeButton.UseUnderline = true;
 			this.upgradeButton.Label = global::VAS.Core.Catalog.GetString ("GtkButton");
-			this.hbox1.Add (this.upgradeButton);
-			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.upgradeButton]));
+			this.hbox3.Add (this.upgradeButton);
+			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.upgradeButton]));
 			w3.Position = 1;
+			w3.Expand = false;
 			w3.Fill = false;
-			this.vbox2.Add (this.hbox1);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.hbox1]));
+			this.vbox4.Add (this.hbox3);
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox4 [this.hbox3]));
 			w4.Position = 1;
 			w4.Expand = false;
 			w4.Fill = false;
-			this.backgroundBox.Add (this.vbox2);
-			this.Add (this.backgroundBox);
+			this.Add (this.vbox4);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
 			}

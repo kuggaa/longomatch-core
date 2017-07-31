@@ -89,7 +89,7 @@ namespace LongoMatch.Gui.Component
 		public ProjectListViewMode ViewMode {
 			set {
 				viewMode = value;
-				treeviewscrolledwindow.Visible = value != ProjectListViewMode.Icons;
+				treeviewscrolledwindow.Visible = limitationWidget.Visible = value != ProjectListViewMode.Icons;
 				icoscrolledwindow.Visible = value == ProjectListViewMode.Icons;
 				checkCell.Visible = value == ProjectListViewMode.ListWithCheck;
 			}
