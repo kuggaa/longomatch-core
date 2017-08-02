@@ -1,6 +1,6 @@
 ﻿//
 //  Copyright (C) 2017 Fluendo S.A.
-using System;
+using System.Diagnostics;
 using System.Linq;
 using LongoMatch.Core;
 using LongoMatch.Core.Common;
@@ -8,6 +8,7 @@ using LongoMatch.Core.Store;
 using LongoMatch.License;
 using VAS.Core.Events;
 using VAS.Core.License;
+using VAS.Core.MVVMC;
 using VAS.Core.ViewModel;
 using VAS.Services;
 
@@ -76,7 +77,7 @@ namespace LongoMatch.Services
 				RegisterName = "Projects",
 				Enabled = true,
 				Maximum = 3,
-			});
+			}, new Command (() => Process.Start (Constants.WEBSITE, "Limitation_Projects")));
 		}
 
 		void HandleProjectCreated (StorageAddedEvent<LMProject> obj)
