@@ -21,9 +21,9 @@ namespace LongoMatch.Gui.Component
 	/// It shows a "progress bar" with the number of remaining/current elements limited.
 	/// </summary>
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class LMLimitationWidget : Gtk.Bin, IView<LicenseLimitationVM>
+	public partial class LMLimitationWidget : Gtk.Bin, IView<CountLimitationVM>
 	{
-		LicenseLimitationVM viewModel;
+		CountLimitationVM viewModel;
 		BindingContext ctx;
 		BarChartView barView;
 		Canvas barCanvas;
@@ -83,7 +83,7 @@ namespace LongoMatch.Gui.Component
 		/// Gets or sets the view model.
 		/// </summary>
 		/// <value>The view model.</value>
-		public LicenseLimitationVM ViewModel {
+		public CountLimitationVM ViewModel {
 			get {
 				return viewModel;
 			}
@@ -102,14 +102,14 @@ namespace LongoMatch.Gui.Component
 
 		public void SetViewModel (object viewModel)
 		{
-			ViewModel = (LicenseLimitationVM)viewModel;
+			ViewModel = (CountLimitationVM)viewModel;
 		}
 
 		void Bind ()
 		{
 			ctx = this.GetBindingContext ();
-			ctx.Add (upgradeButton.Bind (vm => ((LicenseLimitationVM)vm).UpgradeCommand));
-			ctx.Add (countLabel.Bind (vm => ((LicenseLimitationVM)vm).Count, new Int32Converter ()));
+			ctx.Add (upgradeButton.Bind (vm => ((CountLimitationVM)vm).UpgradeCommand));
+			ctx.Add (countLabel.Bind (vm => ((CountLimitationVM)vm).Count, new Int32Converter ()));
 		}
 
 		void HandlePropertyChangedEventHandler (object sender, PropertyChangedEventArgs e)
