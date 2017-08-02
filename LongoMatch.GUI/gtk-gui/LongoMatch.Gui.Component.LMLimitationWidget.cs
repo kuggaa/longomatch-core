@@ -42,7 +42,7 @@ namespace LongoMatch.Gui.Component
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.countLabel = new global::Gtk.Label ();
 			this.countLabel.Name = "countLabel";
-			this.countLabel.LabelProp = global::VAS.Core.Catalog.GetString ("Only <b> {} projects </b> left in your plan!");
+			this.countLabel.LabelProp = global::VAS.Core.Catalog.GetString ("Only <b># projects</b> left in your plan!");
 			this.countLabel.UseMarkup = true;
 			this.hbox3.Add (this.countLabel);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.countLabel]));
@@ -54,9 +54,10 @@ namespace LongoMatch.Gui.Component
 			this.upgradeButton.CanFocus = true;
 			this.upgradeButton.Name = "upgradeButton";
 			this.upgradeButton.UseUnderline = true;
-			this.upgradeButton.Label = global::VAS.Core.Catalog.GetString ("GtkButton");
+			this.upgradeButton.Label = global::VAS.Core.Catalog.GetString ("UPGRADE");
 			this.hbox3.Add (this.upgradeButton);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.upgradeButton]));
+			w3.PackType = ((global::Gtk.PackType)(1));
 			w3.Position = 1;
 			w3.Expand = false;
 			w3.Fill = false;

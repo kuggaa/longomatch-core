@@ -10687,7 +10687,7 @@ Invert</property>
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Bin" id="LongoMatch.Gui.Component.LMLimitationWidget" design-size="262 42">
+  <widget class="Gtk.Bin" id="LongoMatch.Gui.Component.LMLimitationWidget" design-size="406 42">
     <property name="MemberName" />
     <property name="Visible">False</property>
     <child>
@@ -10713,7 +10713,7 @@ Invert</property>
                 <child>
                   <widget class="Gtk.Label" id="countLabel">
                     <property name="MemberName" />
-                    <property name="LabelProp" translatable="yes">Only &lt;b&gt; {} projects &lt;/b&gt; left in your plan!</property>
+                    <property name="LabelProp" translatable="yes">Only &lt;b&gt;# projects&lt;/b&gt; left in your plan!</property>
                     <property name="UseMarkup">True</property>
                   </widget>
                   <packing>
@@ -10728,10 +10728,11 @@ Invert</property>
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Type">TextOnly</property>
-                    <property name="Label" translatable="yes">GtkButton</property>
+                    <property name="Label" translatable="yes">UPGRADE</property>
                     <property name="UseUnderline">True</property>
                   </widget>
                   <packing>
+                    <property name="PackType">End</property>
                     <property name="Position">1</property>
                     <property name="AutoSize">False</property>
                     <property name="Expand">False</property>

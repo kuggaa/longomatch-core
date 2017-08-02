@@ -13,6 +13,7 @@ using VAS.Drawing.CanvasObjects.Blackboard;
 using VAS.Drawing.CanvasObjects.Statistics;
 using VAS.UI.Helpers;
 using VAS.UI.Helpers.Bindings;
+using Constants = VAS.Core.Common.Constants;
 
 namespace LongoMatch.Gui.Component
 {
@@ -31,6 +32,8 @@ namespace LongoMatch.Gui.Component
 		public LMLimitationWidget ()
 		{
 			this.Build ();
+			countLabel.UseMarkup = true;
+
 			// FIXME: This color is bg_dark_color from gtkrc, it should be set in the color scheme, styleconf, whatever...
 			backgroundBox.ModifyBg (Gtk.StateType.Normal, Misc.ToGdkColor (Color.Parse ("#151a20")));
 			barCanvas = new Canvas (new WidgetWrapper (barDrawingArea));
@@ -40,12 +43,6 @@ namespace LongoMatch.Gui.Component
 			upgradeButton.ApplyStyleNormal ();
 
 			Bind ();
-
-			//upgradeButton.Clicked += (sender, e) => {
-			//	barView.ViewModel.Series.ViewModels [0].Elements--;
-			//	barView.ViewModel.Series.ViewModels [1].Elements++;
-			//	barView.ReDraw ();
-			//};
 		}
 
 		public override void Dispose ()
@@ -92,7 +89,8 @@ namespace LongoMatch.Gui.Component
 					viewModel.PropertyChanged -= HandlePropertyChangedEventHandler;
 				}
 				viewModel = value;
-				ctx.UpdateViewModel (viewModel);
+				Visible = viewModel != null && viewModel.Enabled;
+				ctx?.UpdateViewModel (viewModel);
 				if (viewModel != null) {
 					viewModel.PropertyChanged += HandlePropertyChangedEventHandler;
 					viewModel.Sync ();
@@ -109,28 +107,36 @@ namespace LongoMatch.Gui.Component
 		{
 			ctx = this.GetBindingContext ();
 			ctx.Add (upgradeButton.Bind (vm => ((CountLimitationVM)vm).UpgradeCommand));
-			ctx.Add (countLabel.Bind (vm => ((CountLimitationVM)vm).Count, new Int32Converter ()));
 		}
 
 		void HandlePropertyChangedEventHandler (object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == nameof (ViewModel.Count)) {
+			if (ViewModel.NeedsSync (e.PropertyName, nameof (ViewModel.Count))) {
 				SetBarViewModel ();
 			}
 		}
 
 		void SetBarViewModel ()
 		{
+			SeriesVM currentSeries = new SeriesVM ("Current", ViewModel.Count, Color.Transparent);
+			if (ViewModel.Remaining == 0) {
+				currentSeries.Color = Color.Red;
+				countLabel.Markup = $"Oops! <b>No {ViewModel.LimitationName.ToLower ()}</b> left in your plan!";
+			} else {
+				countLabel.Markup = $"Only <b>{ViewModel.Remaining} {ViewModel.LimitationName.ToLower ()}</b> left in your plan!";
+
+			}
+
 			barView.SetViewModel (new BarChartVM {
 				Height = 10,
 				Series = new SeriesCollectionVM {
 					ViewModels = {
-						new SeriesVM("Remaining", ViewModel.Maximum - ViewModel.Count, Color.Green1),
-						new SeriesVM("Current", ViewModel.Count, Color.Transparent)
+						new SeriesVM("Remaining", ViewModel.Remaining, Color.Green1),
+						currentSeries
 					}
 				},
 				Background = new ImageCanvasObject {
-					Image = App.Current.ResourcesLocator.LoadImage ("/Users/vguzman/Desktop/gradient_bg.png"),
+					Image = App.Current.ResourcesLocator.LoadImage ("images/lm-widget-full-bar" + Constants.IMAGE_EXT),
 					Mode = ScaleMode.Fill
 				}
 			});
