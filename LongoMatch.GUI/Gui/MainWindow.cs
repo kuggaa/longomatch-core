@@ -46,7 +46,8 @@ namespace LongoMatch.Gui
 	{
 		IGUIToolkit guiToolKit;
 		Widget currentPanel;
-		LimitationCommand DatabaseManagerCommand;
+		LimitationCommand databaseManagerCommand;
+		LimitationCommand newProjectCommand;
 
 		#region Constructors
 
@@ -70,8 +71,11 @@ namespace LongoMatch.Gui
 			if (Utils.OS == OperatingSystemID.OSX) {
 				this.Move (monitor_geometry.Width * 10 / 100, monitor_geometry.Height * 10 / 100);
 			}
-			DatabaseManagerCommand = new LimitationCommand (LongoMatchFeature.DatabaseManager.ToString (), () => {
+			databaseManagerCommand = new LimitationCommand (LongoMatchFeature.DatabaseManager.ToString (), () => {
 				App.Current.StateController.MoveToModal (DatabasesManagerState.NAME, null, true);
+			});
+			newProjectCommand = new LimitationCommand ("Projects", () => {
+				App.Current.StateController.MoveTo (NewProjectState.NAME, null, true);
 			});
 		}
 
@@ -246,7 +250,7 @@ namespace LongoMatch.Gui
 			};
 			//FIXME: this should be done by binding the LimitationCommand to the MenuItem
 			DatabasesManagerAction.Activated += (o, e) => {
-				DatabaseManagerCommand.Execute ();
+				databaseManagerCommand.Execute ();
 			};
 			PreferencesAction.Activated += (sender, e) => {
 				App.Current.StateController.MoveTo (PreferencesState.NAME, null);
@@ -258,7 +262,7 @@ namespace LongoMatch.Gui
 				App.Current.StateController.MoveTo (OpenProjectState.NAME, null, true);
 			};
 			NewPojectAction.Activated += (sender, e) => {
-				App.Current.StateController.MoveTo (NewProjectState.NAME, null, true);
+				newProjectCommand.Execute ();
 			};
 			ImportProjectAction.Activated += (sender, e) => {
 				App.Current.EventsBroker.Publish<ImportProjectEvent> (new ImportProjectEvent ());

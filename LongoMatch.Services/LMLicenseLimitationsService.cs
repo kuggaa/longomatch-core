@@ -11,6 +11,7 @@ using VAS.Core.License;
 using VAS.Core.MVVMC;
 using VAS.Core.ViewModel;
 using VAS.Services;
+using Utils = VAS.Core.Common.Utils;
 
 namespace LongoMatch.Services
 {
@@ -77,7 +78,7 @@ namespace LongoMatch.Services
 				RegisterName = "Projects",
 				Enabled = true,
 				Maximum = 3,
-			}, new Command (() => Process.Start (Constants.WEBSITE, "Limitation_Projects")));
+			}, new Command (() => Utils.OpenURL (Constants.WEBSITE, "Limitation_Projects")));
 		}
 
 		void HandleProjectCreated (StorageAddedEvent<LMProject> obj)

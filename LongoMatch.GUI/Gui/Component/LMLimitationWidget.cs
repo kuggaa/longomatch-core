@@ -121,9 +121,9 @@ namespace LongoMatch.Gui.Component
 			SeriesVM currentSeries = new SeriesVM ("Current", ViewModel.Count, Color.Transparent);
 			if (ViewModel.Remaining == 0) {
 				currentSeries.Color = Color.Red;
-				countLabel.Markup = $"Oops! <b>No {ViewModel.LimitationName.ToLower ()}</b> left in your plan!";
+				countLabel.Markup = $"Oops! <b>No {ViewModel.RegisterName.ToLower ()}</b> left in your plan!";
 			} else {
-				countLabel.Markup = $"Only <b>{ViewModel.Remaining} {ViewModel.LimitationName.ToLower ()}</b> left in your plan!";
+				countLabel.Markup = $"Only <b>{ViewModel.Remaining} {ViewModel.RegisterName.ToLower ()}</b> left in your plan!";
 
 			}
 
