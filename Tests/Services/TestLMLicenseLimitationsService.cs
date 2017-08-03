@@ -8,6 +8,7 @@ using LongoMatch.License;
 using LongoMatch.Services;
 using Moq;
 using NUnit.Framework;
+using VAS.Core.Common;
 using VAS.Core.Events;
 using VAS.Core.Interfaces.License;
 using VAS.Core.ViewModel;
@@ -62,6 +63,20 @@ namespace Tests.Services
 		}
 
 		[Test]
+		public async Task LMLicenseLimitationsService_ProPlanInitialized_ZoomLimitationDisabled ()
+		{
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.PRO_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			service = new LMLicenseLimitationsService ();
+			var featureLimitation = service.Get<FeatureLimitationVM> (VASFeature.Zoom.ToString ());
+
+			Assert.IsNotNull (featureLimitation);
+			Assert.AreEqual (VASFeature.Zoom.ToString (), featureLimitation.RegisterName);
+			Assert.IsFalse (featureLimitation.Enabled);
+		}
+
+		[Test]
 		public async Task LMLicenseLimitationsService_StarterPlanInitialized_DatabaseManagerLimitationDisabled ()
 		{
 			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.STARTER_PRODUCT_TEXT);
@@ -90,6 +105,20 @@ namespace Tests.Services
 		}
 
 		[Test]
+		public async Task LMLicenseLimitationsService_StarterPlanInitialized_ZoomLimitationEnabled ()
+		{
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.STARTER_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			service = new LMLicenseLimitationsService ();
+			var featureLimitation = service.Get<FeatureLimitationVM> (VASFeature.Zoom.ToString ());
+
+			Assert.IsNotNull (featureLimitation);
+			Assert.AreEqual (VASFeature.Zoom.ToString (), featureLimitation.RegisterName);
+			Assert.IsTrue (featureLimitation.Enabled);
+		}
+
+		[Test]
 		public async Task LMLicenseLimitationsService_BasicPlanInitialized_DatabaseManagerLimitationEnabled ()
 		{
 			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.BASIC_PRODUCT_TEXT);
@@ -114,6 +143,20 @@ namespace Tests.Services
 
 			Assert.IsNotNull (featureLimitation);
 			Assert.AreEqual (LongoMatchFeature.VideoConverter.ToString (), featureLimitation.RegisterName);
+			Assert.IsTrue (featureLimitation.Enabled);
+		}
+
+		[Test]
+		public async Task LMLicenseLimitationsService_BasicPlanInitialized_ZoomLimitationEnabled ()
+		{
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.BASIC_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			service = new LMLicenseLimitationsService ();
+			var featureLimitation = service.Get<FeatureLimitationVM> (VASFeature.Zoom.ToString ());
+
+			Assert.IsNotNull (featureLimitation);
+			Assert.AreEqual (VASFeature.Zoom.ToString (), featureLimitation.RegisterName);
 			Assert.IsTrue (featureLimitation.Enabled);
 		}
 
@@ -146,6 +189,26 @@ namespace Tests.Services
 			service = new LMLicenseLimitationsService ();
 			service.Start ();
 			var featureLimitation = service.Get<FeatureLimitationVM> (LongoMatchFeature.VideoConverter.ToString ());
+			Assert.IsTrue (featureLimitation.Enabled);
+
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.PRO_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			await App.Current.EventsBroker.Publish (new LicenseChangeEvent ());
+
+			Assert.IsFalse (featureLimitation.Enabled);
+			service.Stop ();
+		}
+
+		[Test]
+		public async Task LMLicenseLimitationsService_LicenseChangeEventPro_ZoomLimitationDisabled ()
+		{
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.BASIC_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			service = new LMLicenseLimitationsService ();
+			service.Start ();
+			var featureLimitation = service.Get<FeatureLimitationVM> (VASFeature.Zoom.ToString ());
 			Assert.IsTrue (featureLimitation.Enabled);
 
 			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.PRO_PRODUCT_TEXT);
@@ -198,6 +261,26 @@ namespace Tests.Services
 		}
 
 		[Test]
+		public async Task LMLicenseLimitationsService_LicenseChangeEventStarter_ZoomLimitationEnabled ()
+		{
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.BASIC_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			service = new LMLicenseLimitationsService ();
+			service.Start ();
+			var featureLimitation = service.Get<FeatureLimitationVM> (VASFeature.Zoom.ToString ());
+			Assert.IsTrue (featureLimitation.Enabled);
+
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.STARTER_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			await App.Current.EventsBroker.Publish (new LicenseChangeEvent ());
+
+			Assert.IsTrue (featureLimitation.Enabled);
+			service.Stop ();
+		}
+
+		[Test]
 		public async Task LMLicenseLimitationsService_LicenseChangeEventBasic_DatabaseManagerLimitationDisabled ()
 		{
 			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.PRO_PRODUCT_TEXT);
@@ -226,6 +309,26 @@ namespace Tests.Services
 			service = new LMLicenseLimitationsService ();
 			service.Start ();
 			var featureLimitation = service.Get<FeatureLimitationVM> (LongoMatchFeature.VideoConverter.ToString ());
+			Assert.IsFalse (featureLimitation.Enabled);
+
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.BASIC_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			await App.Current.EventsBroker.Publish (new LicenseChangeEvent ());
+
+			Assert.IsTrue (featureLimitation.Enabled);
+			service.Stop ();
+		}
+
+		[Test]
+		public async Task LMLicenseLimitationsService_LicenseChangeEventBasic_ZoomLimitationEnabled ()
+		{
+			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.PRO_PRODUCT_TEXT);
+			App.Current.LicenseManager = wibuManager;
+			await App.Current.LicenseManager.Init ();
+			service = new LMLicenseLimitationsService ();
+			service.Start ();
+			var featureLimitation = service.Get<FeatureLimitationVM> (VASFeature.Zoom.ToString ());
 			Assert.IsFalse (featureLimitation.Enabled);
 
 			wibuManager = new LMDummyWibuManager (LMDummyWibuManager.BASIC_PRODUCT_TEXT);
