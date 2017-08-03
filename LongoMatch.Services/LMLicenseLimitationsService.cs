@@ -5,6 +5,7 @@ using System.Linq;
 using LongoMatch.Core;
 using LongoMatch.Core.Common;
 using LongoMatch.License;
+using VAS.Core.Common;
 using VAS.Core.License;
 using VAS.Core.ViewModel;
 using VAS.Services;
@@ -33,6 +34,10 @@ namespace LongoMatch.Services
 			string conversionLimitation = LongoMatchFeature.VideoConverter.ToString ();
 			var converterFeature = Get<FeatureLimitationVM> (conversionLimitation);
 			converterFeature.Model.Enabled = status.Limitations.Contains (conversionLimitation);
+
+			string zoomLimitation = VASFeature.Zoom.ToString ();
+			var zoomFeature = Get<FeatureLimitationVM> (zoomLimitation);
+			zoomFeature.Model.Enabled = status.Limitations.Contains (zoomLimitation);
 		}
 
 		void CreateLimitations ()
@@ -48,6 +53,11 @@ namespace LongoMatch.Services
 				RegisterName = LongoMatchFeature.VideoConverter.ToString (),
 				Enabled = status.Limitations.Contains (LongoMatchFeature.VideoConverter.ToString ()),
 				FeatureName = Catalog.GetString ("Video Converter")
+			});
+			Add (new FeatureLicenseLimitation {
+				RegisterName = VASFeature.Zoom.ToString (),
+				Enabled = status.Limitations.Contains (VASFeature.Zoom.ToString ()),
+				FeatureName = Catalog.GetString ("Zoom")
 			});
 		}
 	}
