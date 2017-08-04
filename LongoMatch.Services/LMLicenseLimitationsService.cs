@@ -67,15 +67,16 @@ namespace LongoMatch.Services
 			Add (new FeatureLicenseLimitation {
 				RegisterName = LongoMatchFeature.DatabaseManager.ToString (),
 				Enabled = status.Limitations.Contains (LongoMatchFeature.DatabaseManager.ToString ()),
-				FeatureName = Catalog.GetString ("Database Manager")
+				DisplayName = Catalog.GetString ("Database Manager")
 			});
 			Add (new FeatureLicenseLimitation {
 				RegisterName = LongoMatchFeature.VideoConverter.ToString (),
 				Enabled = status.Limitations.Contains (LongoMatchFeature.VideoConverter.ToString ()),
-				FeatureName = Catalog.GetString ("Video Converter")
+				DisplayName = Catalog.GetString ("Video Converter")
 			});
 			Add (new CountLicenseLimitation {
 				RegisterName = "Projects",
+				DisplayName = Catalog.GetString ("Projects"),
 				Enabled = true,
 				Maximum = 5,
 			}, new Command (() => Utils.OpenURL (Constants.WEBSITE, "Limitation_Projects")));
