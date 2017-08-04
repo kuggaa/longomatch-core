@@ -77,7 +77,7 @@ namespace LongoMatch.Services
 			Add (new CountLicenseLimitation {
 				RegisterName = "Projects",
 				Enabled = true,
-				Maximum = 3,
+				Maximum = 5,
 			}, new Command (() => Utils.OpenURL (Constants.WEBSITE, "Limitation_Projects")));
 		}
 
