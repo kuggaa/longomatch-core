@@ -75,9 +75,9 @@ namespace LongoMatch.Services
 				DisplayName = Catalog.GetString ("Video Converter")
 			});
 			Add (new CountLicenseLimitation {
-				RegisterName = "Projects",
+				RegisterName = LongoMatchCountLimitedObjects.Projects.ToString (),
 				DisplayName = Catalog.GetString ("Projects"),
-				Enabled = true,
+				Enabled = status.Limitations.Contains (LongoMatchCountLimitedObjects.Projects.ToString ()),
 				Maximum = 5,
 			}, new Command (() => Utils.OpenURL (Constants.WEBSITE, "Limitation_Projects")));
 		}
