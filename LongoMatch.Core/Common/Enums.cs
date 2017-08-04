@@ -74,4 +74,11 @@ namespace LongoMatch.Core.Common
 		DatabaseManager,
 		VideoConverter
 	}
+
+	public enum LongoMatchCountLimitedObjects
+	{
+		Projects,
+		Team,
+		Dashboard
+	}
 }
