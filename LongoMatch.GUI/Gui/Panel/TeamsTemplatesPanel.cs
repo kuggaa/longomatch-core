@@ -19,6 +19,7 @@ using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using Gtk;
+using LongoMatch.Core.Common;
 using LongoMatch.Core.ViewModel;
 using LongoMatch.Services.States;
 using LongoMatch.Services.ViewModel;
@@ -98,6 +99,9 @@ namespace LongoMatch.Gui.Panel
 
 			editteamslabel.ModifyFont (FontDescription.FromString (App.Current.Style.Font + " 9"));
 			editplayerslabel.ModifyFont (FontDescription.FromString (App.Current.Style.Font + " 9"));
+
+			limitationWidget.SetViewModel (App.Current.LicenseLimitationsService.Get<CountLimitationVM> (
+			LongoMatchCountLimitedObjects.Team.ToString ()));
 
 			Bind ();
 		}

@@ -1,14 +1,15 @@
 ﻿//
 //  Copyright (C) 2017 Fluendo S.A.
-using System.Diagnostics;
 using System.Linq;
 using LongoMatch.Core;
 using LongoMatch.Core.Common;
 using LongoMatch.Core.Store;
+using LongoMatch.Core.Store.Templates;
 using LongoMatch.License;
 using VAS.Core.Events;
 using VAS.Core.License;
 using VAS.Core.MVVMC;
+using VAS.Core.Store.Templates;
 using VAS.Core.ViewModel;
 using VAS.Services;
 using Utils = VAS.Core.Common.Utils;
@@ -30,7 +31,13 @@ namespace LongoMatch.Services
 		{
 			App.Current.EventsBroker.Subscribe<StorageAddedEvent<LMProject>> (HandleProjectCreated);
 			App.Current.EventsBroker.Subscribe<StorageDeletedEvent<LMProject>> (HandleProjectDeleted);
+			App.Current.EventsBroker.Subscribe<StorageAddedEvent<Team>> (HandleTeamCreated);
+			App.Current.EventsBroker.Subscribe<StorageDeletedEvent<Team>> (HandleTeamDeleted);
+			App.Current.EventsBroker.Subscribe<StorageAddedEvent<Dashboard>> (HandleDashboardCreated);
+			App.Current.EventsBroker.Subscribe<StorageDeletedEvent<Dashboard>> (HandleDashboardDeleted);
+
 			UpdateLicenseLimitationsCounters ();
+
 			return base.Start ();
 		}
 
@@ -38,6 +45,11 @@ namespace LongoMatch.Services
 		{
 			App.Current.EventsBroker.Unsubscribe<StorageAddedEvent<LMProject>> (HandleProjectCreated);
 			App.Current.EventsBroker.Unsubscribe<StorageDeletedEvent<LMProject>> (HandleProjectDeleted);
+			App.Current.EventsBroker.Unsubscribe<StorageAddedEvent<Team>> (HandleTeamCreated);
+			App.Current.EventsBroker.Unsubscribe<StorageDeletedEvent<Team>> (HandleTeamDeleted);
+			App.Current.EventsBroker.Unsubscribe<StorageAddedEvent<Dashboard>> (HandleDashboardCreated);
+			App.Current.EventsBroker.Unsubscribe<StorageDeletedEvent<Dashboard>> (HandleDashboardDeleted);
+
 			return base.Stop ();
 		}
 
@@ -58,6 +70,14 @@ namespace LongoMatch.Services
 		{
 			int count = App.Current.DatabaseManager.ActiveDB.Count<LMProject> ();
 			Get<CountLimitationVM> ("Projects").Count = count;
+
+			count = App.Current.TeamTemplatesProvider.Templates.OfType<LMTeam> ().Count ();
+			// Exclude the 2 static teams
+			Get<CountLimitationVM> (LongoMatchCountLimitedObjects.Team.ToString ()).Count = count - 2;
+
+			count = App.Current.CategoriesTemplatesProvider.Templates.OfType<LMDashboard> ().Count ();
+			// Exclude the system dashboard
+			Get<CountLimitationVM> (LongoMatchCountLimitedObjects.Dashboard.ToString ()).Count = count - 1;
 		}
 
 		void CreateLimitations ()
@@ -79,6 +99,16 @@ namespace LongoMatch.Services
 				Enabled = true,
 				Maximum = 3,
 			}, new Command (() => Utils.OpenURL (Constants.WEBSITE, "Limitation_Projects")));
+			Add (new CountLicenseLimitation {
+				RegisterName = LongoMatchCountLimitedObjects.Team.ToString (),
+				Enabled = true,
+				Maximum = 2
+			}, new Command (() => Utils.OpenURL (Constants.WEBSITE, "Limitation_Teams")));
+			Add (new CountLicenseLimitation {
+				RegisterName = LongoMatchCountLimitedObjects.Dashboard.ToString (),
+				Enabled = true,
+				Maximum = 1
+			}, new Command (() => Utils.OpenURL (Constants.WEBSITE, "Limitation_Dashboards")));
 		}
 
 		void HandleProjectCreated (StorageAddedEvent<LMProject> obj)
@@ -90,6 +120,30 @@ namespace LongoMatch.Services
 		void HandleProjectDeleted (StorageDeletedEvent<LMProject> obj)
 		{
 			var limit = Get<CountLimitationVM> ("Projects");
+			limit.Count--;
+		}
+
+		void HandleTeamCreated (StorageAddedEvent<Team> obj)
+		{
+			var limit = Get<CountLimitationVM> (LongoMatchCountLimitedObjects.Team.ToString ());
+			limit.Count++;
+		}
+
+		void HandleTeamDeleted (StorageDeletedEvent<Team> obj)
+		{
+			var limit = Get<CountLimitationVM> (LongoMatchCountLimitedObjects.Team.ToString ());
+			limit.Count--;
+		}
+
+		void HandleDashboardCreated (StorageAddedEvent<Dashboard> obj)
+		{
+			var limit = Get<CountLimitationVM> (LongoMatchCountLimitedObjects.Dashboard.ToString ());
+			limit.Count++;
+		}
+
+		void HandleDashboardDeleted (StorageDeletedEvent<Dashboard> obj)
+		{
+			var limit = Get<CountLimitationVM> (LongoMatchCountLimitedObjects.Dashboard.ToString ());
 			limit.Count--;
 		}
 	}

@@ -31,6 +31,8 @@ using VAS.Core.MVVMC;
 using VAS.UI.Helpers.Bindings;
 using Image = VAS.Core.Common.Image;
 using Helpers = VAS.UI.Helpers;
+using VAS.Core.ViewModel;
+using LongoMatch.Core.Common;
 
 namespace LongoMatch.Gui.Panel
 {
@@ -106,6 +108,9 @@ namespace LongoMatch.Gui.Panel
 			savetemplatebutton.Sensitive = false;
 			deletetemplatebutton.Sensitive = false;
 			exporttemplatebutton.Sensitive = false;
+			limitationWidget.SetViewModel (App.Current.LicenseLimitationsService.Get<CountLimitationVM>
+										   (LongoMatchCountLimitedObjects.Dashboard.ToString ()));
+
 
 			editdashboardslabel.ModifyFont (FontDescription.FromString (App.Current.Style.Font + " 9"));
 			editbuttonslabel.ModifyFont (FontDescription.FromString (App.Current.Style.Font + " 9"));
