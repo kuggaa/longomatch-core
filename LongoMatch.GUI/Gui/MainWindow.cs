@@ -48,6 +48,8 @@ namespace LongoMatch.Gui
 		Widget currentPanel;
 		LimitationCommand databaseManagerCommand;
 		LimitationCommand newProjectCommand;
+		LimitationCommand importCommand;
+
 
 		#region Constructors
 
@@ -76,6 +78,9 @@ namespace LongoMatch.Gui
 			});
 			newProjectCommand = new LimitationCommand ("Projects", () => {
 				App.Current.StateController.MoveTo (NewProjectState.NAME, null, true);
+			});
+			importCommand = new LimitationCommand ("Projects", () => {
+				App.Current.EventsBroker.Publish (new ImportProjectEvent ());
 			});
 		}
 
@@ -265,7 +270,7 @@ namespace LongoMatch.Gui
 				newProjectCommand.Execute ();
 			};
 			ImportProjectAction.Activated += (sender, e) => {
-				App.Current.EventsBroker.Publish<ImportProjectEvent> (new ImportProjectEvent ());
+				importCommand.Execute ();
 			};
 			FullScreenAction.Activated += (object sender, EventArgs e) => {
 				App.Current.EventsBroker.Publish<ShowFullScreenEvent> (
