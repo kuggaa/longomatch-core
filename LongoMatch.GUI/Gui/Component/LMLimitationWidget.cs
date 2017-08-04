@@ -33,14 +33,13 @@ namespace LongoMatch.Gui.Component
 		{
 			this.Build ();
 			countLabel.UseMarkup = true;
+			countLabel.ModifyFont (Pango.FontDescription.FromString (App.Current.Style.Font + " 16px"));
 
 			// FIXME: This color is bg_dark_color from gtkrc, it should be set in the color scheme, styleconf, whatever...
 			backgroundBox.ModifyBg (Gtk.StateType.Normal, Misc.ToGdkColor (Color.Parse ("#151a20")));
 			barCanvas = new Canvas (new WidgetWrapper (barDrawingArea));
 			barView = new BarChartView ();
 			barCanvas.AddObject (barView);
-
-			upgradeButton.ApplyStyleNormal ();
 
 			Bind ();
 		}

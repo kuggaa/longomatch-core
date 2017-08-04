@@ -33,7 +33,6 @@ namespace LongoMatch.Gui.Component
 			// Container child LongoMatch.Gui.Component.ProjectListWidget.Gtk.Container+ContainerChild
 			this.vbox2 = new global::Gtk.VBox ();
 			this.vbox2.Name = "vbox2";
-			this.vbox2.Spacing = 6;
 			// Container child vbox2.Gtk.Box+BoxChild
 			this.hbox1 = new global::Gtk.HBox ();
 			this.hbox1.Name = "hbox1";
@@ -76,6 +75,7 @@ namespace LongoMatch.Gui.Component
 			w4.Position = 0;
 			w4.Expand = false;
 			w4.Fill = false;
+			w4.Padding = ((uint)(5));
 			// Container child vbox2.Gtk.Box+BoxChild
 			this.limitationWidget = new global::LongoMatch.Gui.Component.LMLimitationWidget ();
 			this.limitationWidget.Events = ((global::Gdk.EventMask)(256));
